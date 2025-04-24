@@ -88,7 +88,6 @@ export const getAllCards = async (_req: Request, res: Response) => {
 };
 
 export const createCard = async (req: Request, res: Response) => {
-  console.log(req);
   try {
     if (!req.user || !req.user._id) {
       return res
