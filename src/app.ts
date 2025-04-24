@@ -19,7 +19,6 @@ mongoose
   });
 
 app.use((req: Request, _res: Response, next: NextFunction) => {
-  // @ts-ignore
   req.user = {
     _id: "680a4ba55838b36d9182352d",
   };

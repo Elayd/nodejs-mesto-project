@@ -19,7 +19,9 @@
   },
   "include": [
     "src/**/*.ts",
-    "src/types/**/*.d.ts" /* Указываем путь к папке с расширениями типов */
+    "src/types/**/*.d.ts" /* Указываем путь к папке с расширениями типов */,
+    "src/types.d.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
+  "files": ["./src/types.d.ts"]
 }

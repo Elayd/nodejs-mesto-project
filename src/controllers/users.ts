@@ -35,7 +35,6 @@ export const createUser = async (req: Request, res: Response) => {
 
 export const getUserById = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     const user = await User.findById(req.params.userId);
 
     if (!user) {
@@ -60,7 +59,6 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const updateUserProfileAvatar = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     if (!req.user || !req.user._id) {
       return res
         .status(HttpStatuses.UNAUTHORIZED)
@@ -69,7 +67,6 @@ export const updateUserProfileAvatar = async (req: Request, res: Response) => {
 
     const { avatar } = req.body;
     const user = await User.findByIdAndUpdate(
-      // @ts-ignore
       req.user._id,
       { avatar },
       { new: true, runValidators: true }
@@ -97,7 +94,6 @@ export const updateUserProfileAvatar = async (req: Request, res: Response) => {
 
 export const updateUserProfile = async (req: Request, res: Response) => {
   try {
-    // @ts-ignore
     if (!req.user || !req.user._id) {
       return res
         .status(HttpStatuses.UNAUTHORIZED)
@@ -106,7 +102,6 @@ export const updateUserProfile = async (req: Request, res: Response) => {
 
     const { name, about } = req.body;
     const user = await User.findByIdAndUpdate(
-      // @ts-ignore
       req.user._id,
       { name, about },
       { new: true, runValidators: true }
