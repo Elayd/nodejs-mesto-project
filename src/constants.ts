@@ -10,19 +10,27 @@ export enum HttpStatuses {
 }
 
 export enum AppMessages {
-  AUTH_REQUIRED = "Authorization required",
-  LOGIN_SUCCESS = "Login successful",
-  LOGOUT_SUCCESS = "Logout successful",
-  USER_EXISTS = "A user with this email already exists",
-  USER_NOT_FOUND = "Requested user not found",
-  INVALID_INPUT = "All fields must be filled in or be correct",
-  CARD_NOT_FOUND = "Card not found",
-  CARD_DELETED = "Card deleted successfully",
-  FORBIDDEN_ACTION = "You are not allowed to delete this card",
-  NOT_FOUND = "Page not found",
-  INTERNAL_SERVER_ERROR = "Internal Server Error",
-  INVALID_CARD_ID = "Wrong card id",
-  USER_NOT_FOUND_ERROR = "User doesn't exists",
-  INVALID_USER_ID = "Wrong user id",
-  USER_VALIDATION_ERROR = "User's data isn't valid",
+  INVALID_INPUT = "Запрашиваемый ресурс не найден",
+  WRONG_CREATE_CARD_DATA = "Переданы некорректные данные при создании карточки",
+  WRONG_CARD_ID = "Некорректный ID карточки",
+  CANNOT_DELETE_FOREIGN_CARD = "Нельзя удалять чужую карточку",
+  CARD_DELETED = "Карточка удалена",
+  CARD_NOT_FOUND = "Карточка не найдена",
+  USER_NOT_FOUND_ERROR = "Пользователь не найден",
+  USER_CREATE_INVALID_DATA = "Переданы некорректные данные при создании пользователя",
+  EMAIL_ALREADY_EXISTS = "Пользователь с таким email уже существует",
+  WRONG_USER_ID = "Некорректный ID пользователя",
+  USER_UPDATE_AVATAR_INVALID_DATA = "Некорректные данные при обновлении аватара",
+  USER_UPDATE_PROFILE_INVALID_DATA = "Некорректные данные при обновлении профиля",
+  USER_INVALID_LOGIN_DATA = "Неправильные почта или пароль",
+  INCORRECT_REQUEST = "Некорректный запрос",
+  FORBIDDEN_REQUEST = "Доступ запрещён",
+  AUTH_REQUESTED = "Необходима авторизация",
+  WRONG_TOKEN = "Неверный токен",
+  INTERNAL_SERVER_ERROR = "На сервере произошла ошибка",
+  INVALID_EMAIL = "Некорректный email",
+  INVALID_AVATAR_URL = "Некорректный URL аватара",
 }
+
+export const urlRegex =
+  /^https?:\/\/(www\.)?[\w\\-]+(\.[\w\\-]+)+([\w\-._~:/?#[\]@!$&'()*+,;=]*)#?$/;

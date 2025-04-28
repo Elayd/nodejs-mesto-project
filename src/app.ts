@@ -1,29 +1,31 @@
-import express, { Request, Response, NextFunction } from "express";
+import express, { Request, Response } from "express";
 import mongoose from "mongoose";
 import userRoutes from "./routes/users";
 import cardRoutes from "./routes/cards";
 import { AppMessages, HttpStatuses } from "./constants";
+import dotenv from "dotenv";
+import { errorLogger, requestLogger } from "./middlewares/logger";
+import { createUser, login } from "./controllers/users";
+import { validateSignin, validateSignup } from "./middlewares/validators";
+import auth from "./middlewares/auth";
+import { errors } from "celebrate";
+import errorHandler from "./middlewares/errorHandler";
+
+dotenv.config();
+
+const { PORT = 3000, DB_ADDRESS = "mongodb://localhost:27017/mestodb" } =
+  process.env;
 
 const app = express();
-const PORT = 3000;
 
 app.use(express.json());
 
-mongoose
-  .connect("mongodb://localhost:27017/mestodb")
-  .then(() => {
-    console.log("MongoDb connection established");
-  })
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-  });
+app.use(requestLogger);
 
-app.use((req: Request, _res: Response, next: NextFunction) => {
-  req.user = {
-    _id: "680a4ba55838b36d9182352d",
-  };
-  next();
-});
+app.post("/signup", validateSignup, createUser);
+app.post("/signin", validateSignin, login);
+
+app.use(auth);
 
 app.use("/users", userRoutes);
 app.use("/cards", cardRoutes);
@@ -34,13 +36,18 @@ app.use("*", (_req: Request, res: Response) => {
     .send({ message: AppMessages.INVALID_INPUT });
 });
 
-app.use((err: Error, _req: Request, res: Response) => {
-  console.error(err.stack);
-  res
-    .status(HttpStatuses.INTERNAL_SERVER_ERROR)
-    .send({ message: AppMessages.INTERNAL_SERVER_ERROR });
-});
+app.use(errorLogger);
+app.use(errors());
+app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log(`Server listening port: ${PORT}`);
-});
+mongoose
+  .connect(DB_ADDRESS)
+  .then(() => {
+    console.log("MongoDb connection established");
+    app.listen(PORT, () => {
+      console.log(`Server listening port: ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });

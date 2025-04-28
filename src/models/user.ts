@@ -1,7 +1,10 @@
-import { Schema, model, Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 import validator from "validator";
+import { AppMessages } from "../constants";
 
-export interface IUser extends Document {
+interface IUser extends Document {
+  email: string;
+  password: string;
   name: string;
   about: string;
   avatar: string;
@@ -9,28 +12,54 @@ export interface IUser extends Document {
 
 const userSchema = new Schema<IUser>(
   {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      validate: {
+        validator: (v: string) => validator.isEmail(v),
+        message: AppMessages.INVALID_EMAIL,
+      },
+    },
+    password: {
+      type: String,
+      required: true,
+      select: false,
+    },
     name: {
       type: String,
-      required: [true, 'Field "name" is required'],
-      minlength: [2, 'Field "name" must be at least 2 characters'],
-      maxlength: [30, 'Field "name" must be less than 30 characters'],
+      default: "Жак-Ив Кусто",
+      minlength: 2,
+      maxlength: 30,
     },
     about: {
       type: String,
-      required: [true, 'Field "about" is required'],
-      minlength: [2, 'Field "about" must be at least 2 characters'],
-      maxlength: [200, 'Field "about" must be less than 200 characters'],
+      default: "Исследователь",
+      minlength: 2,
+      maxlength: 200,
     },
     avatar: {
       type: String,
-      required: [true, 'Field "avatar" is required'],
+      default: "https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg",
       validate: {
-        validator: validator.isURL,
-        message: 'Field "avatar" must contain a valid URL',
+        validator(v: string) {
+          return /^https?:\/\/(www\.)?[\w-]+\.[\w]{2,}([/\w\-._~:/?#[\]@!$&'()*+,;=]*)#?$/.test(
+            v
+          );
+        },
+        message: AppMessages.INVALID_AVATAR_URL,
       },
     },
   },
-  { versionKey: false }
+  {
+    versionKey: false,
+    toJSON: {
+      transform(_doc, ret) {
+        const { password, ...rest } = ret;
+        return rest;
+      },
+    },
+  }
 );
 
-export default model<IUser>("user", userSchema);
+export default mongoose.model<IUser>("user", userSchema);
